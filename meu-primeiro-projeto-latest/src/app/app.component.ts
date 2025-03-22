@@ -7,7 +7,10 @@ import { NewComponent } from './components/new-component/new-component.component
   imports: [RouterOutlet, NewComponent],
   template:`<router-outlet></router-outlet>
 <h1>aaaaa</h1>
-  <app-new-component />`,
+<div class="theme-red">
+  <app-new-component />
+</div>
+`,
 })
 export class AppComponent {
   title = 'meu-primeiro-projeto-latest';
