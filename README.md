@@ -1,10 +1,11 @@
 # Aprendizado-angular
 
-Repositório com meus estudos e experimentos em Angular, incluindo exemplos práticos e boas práticas do framework.
+Repositório com meus estudos e experimentos em Angular, incluindo exemplos práticos e boas práticas do framework. 
 
 ## Sumário
 1. [Configuração Inicial](#configura%C3%A7%C3%A3o-inicial)
 2. [Componentes](#componentes)
+3. [Estilos e SCSS](#estilos-e-scss)
 
 ---
 
@@ -84,6 +85,60 @@ ng g c nome-do-componente
 ```
 
 Esse comando cria a estrutura completa de um componente dentro da pasta `src/app`.
+
+---
+
+## Estilos e SCSS
+
+### Conceito de CSS/SCSS
+CSS significa *Cascading Style Sheets* (Folhas de Estilo em Cascata). É usado para definir a aparência visual de elementos HTML, controlando propriedades como:
+
+- Cor
+- Tamanho
+- Posição
+- Borda
+- Fonte
+- Fundo
+
+Os estilos podem ser aplicados:
+- Diretamente no HTML
+- Em arquivos CSS externos
+- No componente Angular via a propriedade `styles` ou arquivos `.scss`
+
+### Exemplo prático com SCSS e Angular
+```scss
+:host {
+  h2 {
+    background-color: blue;
+  }
+}
+
+:host-context(.theme-dark) {
+  h2 {
+    background: black;
+    color: white;
+  }
+}
+
+:host-context(.theme-red) {
+  h2 {
+    background: red;
+  }
+}
+
+::ng-deep {
+  .theme-red {
+    border: 5px solid blue;
+  }
+}
+```
+
+### Explicação
+- `:host` aplica estilos diretamente ao componente atual.
+- `:host-context()` aplica estilos condicionais baseados em classes no contexto externo.
+- `::ng-deep` permite estilizar elementos filhos em componentes que normalmente estariam fora do escopo de estilo do componente atual.
+
+Esses recursos do Angular com SCSS permitem criar temas e estilos encapsulados com maior controle visual e reutilização.
 
 ---
 
