@@ -6,6 +6,7 @@ Repositório com meus estudos e experimentos em Angular, incluindo exemplos prá
 1. [Configuração Inicial](#configura%C3%A7%C3%A3o-inicial)
 2. [Componentes](#componentes)
 3. [Estilos e SCSS](#estilos-e-scss)
+4. [Template HTML e Bindings](#template-html-e-bindings)
 
 ---
 
@@ -139,6 +140,68 @@ Os estilos podem ser aplicados:
 - `::ng-deep` permite estilizar elementos filhos em componentes que normalmente estariam fora do escopo de estilo do componente atual.
 
 Esses recursos do Angular com SCSS permitem criar temas e estilos encapsulados com maior controle visual e reutilização.
+
+---
+
+## Template HTML e Bindings
+
+### Conceito
+
+O Angular permite fazer ligações (*bindings*) entre a lógica do componente e a interface do usuário (template HTML). Isso facilita a criação de interfaces dinâmicas, onde os dados do componente são exibidos ou controlam comportamentos diretamente no HTML.
+
+---
+
+### Interpolation (Interpolação)
+Permite exibir dados do componente diretamente no HTML usando `{{ }}`.
+
+**Exemplo:**
+```html
+<h3>Text interpolation</h3>
+<p>{{ name }} - {{ age }} - {{ sum(1, 2) }}</p>
+<p>{{ age > 1 ? "teste" : "teste2" }}</p>
+```
+
+---
+
+### Property Binding
+Usado para ligar propriedades de elementos HTML a propriedades do componente com `[property]`.
+
+**Exemplo:**
+```html
+<h3>Property binding</h3>
+<button [disabled]="isDisabled">Botão</button>
+<img [src]="scrValue" [alt]="name" [title]="name" />
+```
+
+---
+
+### Exemplo Completo do Componente
+
+```ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-template-binding',
+  templateUrl: './template-binding.component.html',
+  styleUrls: ['./template-binding.component.scss']
+})
+export class TemplateBindingComponent {
+  public name: string = 'Sergio';
+  public age: number = 21;
+  public isDisabled = true;
+  public scrValue = 'https://th.bing.com/th/id/OIP.eBV6NKOwkJSZXDufD45I3wHaE8?rs=1&pid=ImgDetMain';
+
+  public sum(val1: number, val2: number) {
+    return val1 + val2;
+  }
+
+  constructor() {
+    setTimeout(() => {
+      this.name = 'João e Maria';
+    }, 1000);
+  }
+}
+```
 
 ---
 
