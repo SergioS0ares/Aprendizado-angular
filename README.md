@@ -7,6 +7,7 @@ Repositório com meus estudos e experimentos em Angular, incluindo exemplos prá
 2. [Componentes](#componentes)
 3. [Estilos e SCSS](#estilos-e-scss)
 4. [Template HTML e Bindings](#template-html-e-bindings)
+5. [Control Flow](#control-flow)
 
 ---
 
@@ -252,16 +253,19 @@ ngAfterViewInit(): void {
 ```
 
 ---
-Control Flow
+## Control Flow
 
-Conceito
+### Conceito
 
-O Angular oferece mecanismos para controlar o fluxo de exibição no template usando diretivas como *ngIf, *ngFor, ng-template e ng-container.
+O Angular oferece mecanismos para controlar o fluxo de exibição no template usando diretivas como `*ngIf`, `*ngFor`, `ng-template` e `ng-container`.
 
 Essas estruturas são utilizadas para renderizar elementos condicionalmente ou iterativamente com base nos dados do componente.
 
-*ngIf e *ngFor com Observables e fallback
+---
 
+### *ngIf e *ngFor com Observables e fallback
+
+```html
 <ul *ngIf="loadingData$ | async as data; else loading">
   <li *ngFor="let item of data; trackBy: trackByFn">
     {{ item }}
@@ -271,9 +275,13 @@ Essas estruturas são utilizadas para renderizar elementos condicionalmente ou i
 <ng-template #loading>
   <p>Carregando...</p>
 </ng-template>
+```
 
-Forma antiga com 
+---
 
+### Forma antiga com <ng-container>
+
+```html
 <ng-container *ngIf="loadingData$ | async as data2; else loadingTpl">
   <ul>
     <ng-container *ngFor="let item of data2; trackBy: trackByFn">
@@ -285,9 +293,13 @@ Forma antiga com
 <ng-template #loadingTpl>
   <p>Carregando...</p>
 </ng-template>
+```
 
-*ngFor com variáveis de contexto
+---
 
+### *ngFor com variáveis de contexto
+
+```html
 <ul>
   <li *ngFor="let item of items; let i = index; let c = count; let f = first; let l = last; let e = even; let o = odd; trackBy: trackByFn">
     <p>{{ item.name }}</p>
@@ -299,9 +311,13 @@ Forma antiga com
     <p>odd = {{ o }}</p>
   </li>
 </ul>
+```
 
-Forma antiga com 
+---
 
+### Forma antiga com <ng-container>
+
+```html
 <ng-container *ngFor="let item of items; let i = index; let c = count; let f = first; let l = last; let e = even; let o = odd; trackBy: trackByFn">
   <p>{{ item.name }}</p>
   <p>index = {{ i }}</p>
@@ -311,12 +327,18 @@ Forma antiga com
   <p>even = {{ e }}</p>
   <p>odd = {{ o }}</p>
 </ng-container>
+```
 
-Interação com input e adição dinâmica
+---
 
+### Interação com input e adição dinâmica
+
+```html
 <input #name type="text" />
 <button (click)="addNewName(name.value)">Add Name</button>
+```
 
+```ts
 public items = [
   { name: 'Sérgio Soares' },
   { name: 'João' }
@@ -325,8 +347,13 @@ public items = [
 public addNewName(value: string) {
   this.items.push({ name: value });
 }
+```
 
 Esses recursos permitem desenvolver interfaces dinâmicas, reativas e com controle granular de fluxo baseado em condições e listas.
 
+---
+
 Novos aprendizados serão adicionados conforme avanço nos estudos.
+
+
 
