@@ -147,59 +147,107 @@ Esses recursos do Angular com SCSS permitem criar temas e estilos encapsulados c
 
 ### Conceito
 
-O Angular permite fazer ligações (*bindings*) entre a lógica do componente e a interface do usuário (template HTML). Isso facilita a criação de interfaces dinâmicas, onde os dados do componente são exibidos ou controlam comportamentos diretamente no HTML.
+O Angular permite fazer ligações (*bindings*) entre a lógica do componente e a interface do usuário (template HTML). Isso facilita a criação de interfaces dinâmicas e reativas.
 
 ---
 
 ### Interpolation (Interpolação)
-Permite exibir dados do componente diretamente no HTML usando `{{ }}`.
+Exibe valores do componente diretamente no HTML usando `{{ }}`.
 
-**Exemplo:**
 ```html
-<h3>Text interpolation</h3>
 <p>{{ name }} - {{ age }} - {{ sum(1, 2) }}</p>
-<p>{{ age > 1 ? "teste" : "teste2" }}</p>
+<p>{{ condition }}</p>
 ```
 
 ---
 
 ### Property Binding
-Usado para ligar propriedades de elementos HTML a propriedades do componente com `[property]`.
+Liga propriedades HTML a variáveis do componente usando colchetes `[]`.
 
-**Exemplo:**
 ```html
-<h3>Property binding</h3>
 <button [disabled]="isDisabled">Botão</button>
 <img [src]="scrValue" [alt]="name" [title]="name" />
 ```
 
 ---
 
-### Exemplo Completo do Componente
+### Attribute Binding
+Permite configurar atributos HTML com base em valores do componente.
+
+```html
+<p [attr.title]="name" [attr.aria-label]="name">Sérgio Soares</p>
+```
+
+---
+
+### Class e Style Binding
+Controla dinamicamente classes CSS e estilos inline.
+
+```html
+<p [class.background-red]="age == 32" [class.background-blue]="age > 32">{{ name }}</p>
+<p [style.text-decoration]="isTextDecoration">{{ age }}</p>
+```
+
+---
+
+### Event Binding
+Associa eventos do DOM a métodos do componente.
+
+```html
+<button (click)="sumAge()">+</button>
+<button (click)="subAge()">-</button>
+<input (keydown.shift)="onKeyDown($event)" />
+
+<div style="background: red; width: 300px; height: 300px; margin-top: 10px" (mousemove)="onMouseMove($event)"></div>
+```
+
+---
+
+### Two-way Binding
+Permite sincronizar dados entre a view e o componente com `[(ngModel)]`.
+
+```html
+<input [(ngModel)]="name" />
+<p>{{ name }}</p>
+```
+
+---
+
+### Diretivas de atributo: NgClass e NgStyle
+Aplicação dinâmica de classes e estilos com expressões condicionais.
+
+```html
+<div [ngClass]="{ 'background-red': age > 35, 'background-blue': age < 35 }">Classes condicionais.</div>
+
+<div [ngStyle]="{ 'color': age > 35 ? 'green' : 'red', 'font-size': age > 35 ? '10px' : '20px' }">Estilo dinâmico.</div>
+```
+
+---
+
+### Template Variables
+Variáveis locais para acessar elementos do DOM ou componentes filhos diretamente no template.
+
+```html
+<h2 #h1>Template Variables</h2>
+<p>{{ h1.innerText }}</p>
+
+<input #name value="Sérgio Soares" />
+<p>{{ name.value }}</p>
+
+<app-new-component />
+```
+
+No componente TypeScript:
 
 ```ts
-import { Component } from '@angular/core';
+@ViewChild('name') public nameInput!: ElementRef;
+@ViewChild('h1') public nameH1!: ElementRef;
+@ViewChild('NewComponent') public childComponent!: NewComponent;
 
-@Component({
-  selector: 'app-template-binding',
-  templateUrl: './template-binding.component.html',
-  styleUrls: ['./template-binding.component.scss']
-})
-export class TemplateBindingComponent {
-  public name: string = 'Sergio';
-  public age: number = 21;
-  public isDisabled = true;
-  public scrValue = 'https://th.bing.com/th/id/OIP.eBV6NKOwkJSZXDufD45I3wHaE8?rs=1&pid=ImgDetMain';
-
-  public sum(val1: number, val2: number) {
-    return val1 + val2;
-  }
-
-  constructor() {
-    setTimeout(() => {
-      this.name = 'João e Maria';
-    }, 1000);
-  }
+ngAfterViewInit(): void {
+  console.log(this.nameInput.nativeElement.value);
+  console.log(this.nameH1.nativeElement.innerText);
+  console.log(this.childComponent.name);
 }
 ```
 
