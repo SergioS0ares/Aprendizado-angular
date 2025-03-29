@@ -1,0 +1,58 @@
+<h2>Control flow</h2>
+<h3>*ngIf, FOR</h3>
+
+<!-- Forma nova -->
+<ul *ngIf="loadingData$ | async as data; else loading">
+  <li *ngFor="let item of data; trackBy: trackByFn">
+    {{ item }}
+  </li>
+</ul>
+
+<ng-template #loading>
+  <p>Carregando...</p>
+</ng-template>
+
+<!-- Forma antiga -->
+<ng-container *ngIf="loadingData$ | async as data2; else loadingTpl">
+  <ul>
+    <ng-container *ngFor="let item of data2; trackBy: trackByFn">
+      <li>{{ item }}</li>
+    </ng-container>
+  </ul>
+</ng-container>
+
+<ng-template #loadingTpl>
+  <p>Carregando...</p>
+</ng-template>
+
+<hr />
+<h3>*ngFor avançado</h3>
+
+<!-- Forma nova -->
+<ul>
+  <li *ngFor="let item of items; let i = index; let c = count; let f = first; let l = last; let e = even; let o = odd; trackBy: trackByFn">
+    <p>{{ item.name }}</p>
+    <p>index = {{ i }}</p>
+    <p>count = {{ c }}</p>
+    <p>first = {{ f }}</p>
+    <p>last = {{ l }}</p>
+    <p>even = {{ e }}</p>
+    <p>odd = {{ o }}</p>
+  </li>
+</ul>
+
+<!-- Forma antiga -->
+<ng-container *ngFor="let item of items; let i = index; let c = count; let f = first; let l = last; let e = even; let o = odd; trackBy: trackByFn">
+  <p>{{ item.name }}</p>
+  <p>index = {{ i }}</p>
+  <p>count = {{ c }}</p>
+  <p>first = {{ f }}</p>
+  <p>last = {{ l }}</p>
+  <p>even = {{ e }}</p>
+  <p>odd = {{ o }}</p>
+</ng-container>
+
+<br />
+
+<input #name type="text" />
+<button (click)="addNewName(name.value)">Add Name</button>
