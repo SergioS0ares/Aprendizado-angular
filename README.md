@@ -252,6 +252,81 @@ ngAfterViewInit(): void {
 ```
 
 ---
+Control Flow
+
+Conceito
+
+O Angular oferece mecanismos para controlar o fluxo de exibição no template usando diretivas como *ngIf, *ngFor, ng-template e ng-container.
+
+Essas estruturas são utilizadas para renderizar elementos condicionalmente ou iterativamente com base nos dados do componente.
+
+*ngIf e *ngFor com Observables e fallback
+
+<ul *ngIf="loadingData$ | async as data; else loading">
+  <li *ngFor="let item of data; trackBy: trackByFn">
+    {{ item }}
+  </li>
+</ul>
+
+<ng-template #loading>
+  <p>Carregando...</p>
+</ng-template>
+
+Forma antiga com 
+
+<ng-container *ngIf="loadingData$ | async as data2; else loadingTpl">
+  <ul>
+    <ng-container *ngFor="let item of data2; trackBy: trackByFn">
+      <li>{{ item }}</li>
+    </ng-container>
+  </ul>
+</ng-container>
+
+<ng-template #loadingTpl>
+  <p>Carregando...</p>
+</ng-template>
+
+*ngFor com variáveis de contexto
+
+<ul>
+  <li *ngFor="let item of items; let i = index; let c = count; let f = first; let l = last; let e = even; let o = odd; trackBy: trackByFn">
+    <p>{{ item.name }}</p>
+    <p>index = {{ i }}</p>
+    <p>count = {{ c }}</p>
+    <p>first = {{ f }}</p>
+    <p>last = {{ l }}</p>
+    <p>even = {{ e }}</p>
+    <p>odd = {{ o }}</p>
+  </li>
+</ul>
+
+Forma antiga com 
+
+<ng-container *ngFor="let item of items; let i = index; let c = count; let f = first; let l = last; let e = even; let o = odd; trackBy: trackByFn">
+  <p>{{ item.name }}</p>
+  <p>index = {{ i }}</p>
+  <p>count = {{ c }}</p>
+  <p>first = {{ f }}</p>
+  <p>last = {{ l }}</p>
+  <p>even = {{ e }}</p>
+  <p>odd = {{ o }}</p>
+</ng-container>
+
+Interação com input e adição dinâmica
+
+<input #name type="text" />
+<button (click)="addNewName(name.value)">Add Name</button>
+
+public items = [
+  { name: 'Sérgio Soares' },
+  { name: 'João' }
+];
+
+public addNewName(value: string) {
+  this.items.push({ name: value });
+}
+
+Esses recursos permitem desenvolver interfaces dinâmicas, reativas e com controle granular de fluxo baseado em condições e listas.
 
 Novos aprendizados serão adicionados conforme avanço nos estudos.
 
