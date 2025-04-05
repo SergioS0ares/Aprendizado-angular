@@ -253,17 +253,18 @@ ngAfterViewInit(): void {
 ```
 
 ---
+
 ## Control Flow
 
 ### Conceito
 
-O Angular oferece mecanismos para controlar o fluxo de exibição no template usando diretivas como `*ngIf`, `*ngFor`, `ng-template` e `ng-container`.
+O Angular oferece mecanismos para controlar o fluxo de exibição no template usando diretivas como `*ngIf`, `*ngFor`, `ng-template`, `ng-container` e `*ngSwitch`.
 
-Essas estruturas são utilizadas para renderizar elementos condicionalmente ou iterativamente com base nos dados do componente.
+Essas estruturas permitem mostrar elementos com base em condições ou listas de dados, deixando a interface dinâmica e reativa.
 
 ---
 
-### *ngIf e *ngFor com Observables e fallback
+### \*ngIf e \*ngFor com Observables e fallback
 
 ```html
 <ul *ngIf="loadingData$ | async as data; else loading">
@@ -277,9 +278,7 @@ Essas estruturas são utilizadas para renderizar elementos condicionalmente ou i
 </ng-template>
 ```
 
----
-
-### Forma antiga com <ng-container>
+### Forma antiga com `<ng-container>`
 
 ```html
 <ng-container *ngIf="loadingData$ | async as data2; else loadingTpl">
@@ -297,7 +296,7 @@ Essas estruturas são utilizadas para renderizar elementos condicionalmente ou i
 
 ---
 
-### *ngFor com variáveis de contexto
+### \*ngFor com variáveis de contexto
 
 ```html
 <ul>
@@ -313,9 +312,7 @@ Essas estruturas são utilizadas para renderizar elementos condicionalmente ou i
 </ul>
 ```
 
----
-
-### Forma antiga com <ng-container>
+### Forma antiga com `<ng-container>`
 
 ```html
 <ng-container *ngFor="let item of items; let i = index; let c = count; let f = first; let l = last; let e = even; let o = odd; trackBy: trackByFn">
@@ -331,29 +328,68 @@ Essas estruturas são utilizadas para renderizar elementos condicionalmente ou i
 
 ---
 
-### Interação com input e adição dinâmica
+### Exibição condicional com estrutura vazia
 
 ```html
-<input #name type="text" />
-<button (click)="addNewName(name.value)">Add Name</button>
+<ul>
+  @for (item of items; track item.name) {
+    <li>{{ item.name }}</li>
+  } @empty {
+    <li>Não contém valores</li>
+  }
+</ul>
 ```
 
-```ts
-public items = [
-  { name: 'Sérgio Soares' },
-  { name: 'João' }
-];
+### Alternativa antiga com `*ngIf`
 
-public addNewName(value: string) {
-  this.items.push({ name: value });
+```html
+<ul>
+  <ng-container *ngIf="items.length === 0; else itemsExist">
+    <li>Não contém valores</li>
+  </ng-container>
+
+  <ng-template #itemsExist>
+    <ng-container *ngFor="let item of items">
+      <li>{{ item.name }}</li>
+    </ng-container>
+  </ng-template>
+</ul>
+```
+
+---
+
+### Switch Case (ngSwitch)
+
+```html
+@switch (switchCondition) {
+  @case ('A') {
+    <p>Sim sua letra é: A</p>
+  }
+  @case ('B') {
+    <p>Sim sua letra é: B</p>
+  }
+  @default {
+    <p>Os dados não foram encontrados</p>
+  }
 }
 ```
 
-Esses recursos permitem desenvolver interfaces dinâmicas, reativas e com controle granular de fluxo baseado em condições e listas.
+### Forma antiga com `ngSwitch`/`ngSwitchCase`
+
+```html
+<ng-container [ngSwitch]="switchCondition">
+  <ng-container *ngSwitchCase="'A'">
+    <p>Sim sua letra é: A</p>
+  </ng-container>
+  <ng-container *ngSwitchCase="'B'">
+    <p>Sim sua letra é: B</p>
+  </ng-container>
+  <ng-container *ngSwitchDefault>
+    <p>Os dados não foram encontrados</p>
+  </ng-container>
+</ng-container>
+```
 
 ---
 
 Novos aprendizados serão adicionados conforme avanço nos estudos.
-
-
-
