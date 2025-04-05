@@ -56,3 +56,62 @@
 
 <input #name type="text" />
 <button (click)="addNewName(name.value)">Add Name</button>
+
+<hr />
+<h3>for e empty</h3>
+
+<!-- Nova Forma -->
+<ul>
+  @for (item of items; track item.name) {
+    <li> {{ item.name }} </li>
+  }
+  @empty {
+    <li> NÃO contém valores </li>
+  }
+</ul>
+
+<!-- Forma Antiga -->
+<ul>
+  <ng-container *ngIf="items.length === 0; else itemsExist">
+    <li> Não contém valores </li>
+  </ng-container>
+
+  <ng-template #itemsExist>
+    <ng-container *ngFor="let item of items">
+      <li>
+        {{ item.name }}
+      </li>
+    </ng-container>
+  </ng-template>
+</ul>
+
+<hr />
+<h3>switch</h3>
+
+<!-- Nova Forma -->
+@switch (switchCondition) {
+  @case ('A') {
+    <p>Sim sua letra é: A</p>
+  }
+  @case ('B') {
+    <p>Sim sua letra é: B</p>
+  }
+  @default {
+    <p>Os dados não foram encontrados</p>
+  }
+}
+
+<!-- Forma Antiga -->
+<ng-container [ngSwitch]="switchCondition">
+  <ng-container *ngSwitchCase="'A'">
+    <p>Sim sua letra é: A</p>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'B'">
+    <p>Sim sua letra é: B</p>
+  </ng-container>
+
+  <ng-container *ngSwitchDefault>
+    <p>Os dados não foram encontrados</p>
+  </ng-container>
+</ng-container>
