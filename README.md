@@ -1,13 +1,16 @@
 # Aprendizado-angular
 
-Repositório com meus estudos e experimentos em Angular, incluindo exemplos práticos e boas práticas do framework. 
+Repositório com meus estudos e experimentos em Angular, incluindo exemplos práticos e boas práticas do framework.
 
 ## Sumário
+
 1. [Configuração Inicial](#configura%C3%A7%C3%A3o-inicial)
 2. [Componentes](#componentes)
 3. [Estilos e SCSS](#estilos-e-scss)
 4. [Template HTML e Bindings](#template-html-e-bindings)
 5. [Control Flow](#control-flow)
+6. [Deferrable Views](#deferrable-views)
+7. [Signals](#signals)
 
 ---
 
@@ -389,6 +392,163 @@ Essas estruturas permitem mostrar elementos com base em condições ou listas de
   </ng-container>
 </ng-container>
 ```
+
+---
+
+## Deferrable Views
+
+### Conceito
+
+Deferrable Views, também conhecidos como **`@defer`** blocks, são uma funcionalidade introduzida no Angular 17 que permite adiar o carregamento de determinadas partes de uma aplicação. Isso pode ser usado para melhorar o desempenho de aplicações com muito conteúdo.
+
+### Exemplos de uso
+
+- **Carregamento de imagens** apenas quando visíveis.
+- **Carregamento de dados** sob demanda.
+- **Carregamento de componentes pesados** somente quando necessário.
+
+### Diretivas disponíveis com `@defer`
+
+#### `on`
+Especifica uma condição de acionador usando um dos seguintes gatilhos:
+
+- `on idle`: Executa quando o navegador estiver ocioso.
+- `on timer(x)`: Aguarda um tempo determinado (ex: `on timer(5s)`).
+- `on viewport`: Quando o elemento entra na viewport (visível na tela).
+- `on interaction(selector)`: Dispara após interação com um elemento específico.
+- `on hover(selector)`: Quando o usuário passa o mouse sobre o elemento.
+- `on immediate`: Executa imediatamente, mas com menor prioridade que o carregamento principal.
+- `on prefetch`: Indica que o conteúdo pode ser carregado antecipadamente para melhorar a performance (pré-busca).
+
+> Os `on` triggers são sempre tratados como **condições OR**. Qualquer um deles sendo satisfeito inicia o carregamento.
+
+#### `when`
+Especifica uma condição imperativa, como uma expressão booleana. Quando essa expressão se torna verdadeira, o conteúdo é carregado:
+
+```html
+@defer (when isDataReady) {
+  <p>Conteúdo adiado será exibido aqui</p>
+}
+```
+
+Pode ser usado com observáveis + `async`:
+```html
+@defer (when observable$ | async) { ... }
+```
+
+---
+
+### Sintaxes principais
+
+```html
+@defer (on timer(5s); on interaction(trigger); on hover(trigger)) {
+  <app-new-component />
+}
+
+@placeholder (minimum 5s) {
+  <div>Mostrar antes de carregar algo.</div>
+}
+
+@loading (after 150ms; minimum 5s) {
+  <p>Loading...</p>
+}
+
+@error {
+  <p>Loading failed :(</p>
+}
+```
+
+### Considerações
+
+- Os gatilhos (`on`) são tratados como condições **OR**.
+- `@placeholder`, `@loading` e `@error` **devem estar fora** do bloco `@defer`.
+- Pode melhorar performance, mas pode introduzir complexidade ou impactar usabilidade se mal utilizado.
+
+---
+
+## Signals
+
+### Conceito
+
+Signals são uma nova funcionalidade do Angular 17 que introduzem uma maneira reativa e eficiente de lidar com estados em componentes.
+
+Permitem comunicação entre componentes de forma assíncrona, atualizações automáticas de UI e mais performance no Angular.
+
+### Exemplos
+
+- **Comunicação assíncrona** entre partes da aplicação.
+- **Notificações** entre componentes.
+- **Atualização de dados reativa** em arrays e valores computados.
+
+### Código exemplo
+
+#### Componente (TypeScript)
+
+```ts
+import { Component, computed, effect, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+@Component({
+  selector: 'app-signals',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './signals.component.html',
+  styleUrl: './signals.component.scss'
+})
+export class SignalsComponent {
+  public firstName = signal('Sérgio');
+  public lastName = signal('Soares');
+
+  public fullName = computed(() => this.firstName() + this.lastName());
+
+  public array = signal([1]);
+
+  constructor() {
+    effect(() => {
+      console.log(this.fullName());
+      if (this.firstName() === 'João ') {
+        alert();
+      }
+    });
+  }
+
+  public updateName() {
+    return this.firstName.set('João ');
+  }
+
+  public updateArray() {
+    this.array.update((oldValue: Array<number>) => [
+      ...oldValue,
+      oldValue.length + 1
+    ]);
+  }
+}
+```
+
+#### Template (HTML)
+
+```html
+<h2>Signals</h2>
+<p>{{ firstName() }} {{ lastName() }}</p>
+<p>Full Name: {{ fullName() }}</p>
+
+<ul>
+  @for(item of array(); track item) {
+    <li>{{ item }}</li>
+  }
+</ul>
+
+<button (click)="updateName()">Update Name</button>
+<button (click)="updateArray()">Update Array</button>
+```
+
+### Considerações
+
+- `signal()` cria um estado reativo.
+- `computed()` cria valores derivados de sinais.
+- `effect()` executa efeitos colaterais com base em sinais.
+
+Signals tornam o Angular mais previsível e com performance semelhante a bibliotecas como SolidJS.
 
 ---
 
