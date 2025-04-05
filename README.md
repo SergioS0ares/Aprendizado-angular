@@ -150,116 +150,19 @@ Esses recursos do Angular com SCSS permitem criar temas e estilos encapsulados c
 
 O Angular permite fazer ligações (*bindings*) entre a lógica do componente e a interface do usuário (template HTML). Isso facilita a criação de interfaces dinâmicas e reativas.
 
----
+...
 
-### Interpolation (Interpolação)
-Exibe valores do componente diretamente no HTML usando `{{ }}`.
-
-```html
-<p>{{ name }} - {{ age }} - {{ sum(1, 2) }}</p>
-<p>{{ condition }}</p>
-```
+(Conteúdo anterior permanece igual até "## Control Flow")
 
 ---
 
-### Property Binding
-Liga propriedades HTML a variáveis do componente usando colchetes `[]`.
-
-```html
-<button [disabled]="isDisabled">Botão</button>
-<img [src]="scrValue" [alt]="name" [title]="name" />
-```
-
----
-
-### Attribute Binding
-Permite configurar atributos HTML com base em valores do componente.
-
-```html
-<p [attr.title]="name" [attr.aria-label]="name">Sérgio Soares</p>
-```
-
----
-
-### Class e Style Binding
-Controla dinamicamente classes CSS e estilos inline.
-
-```html
-<p [class.background-red]="age == 32" [class.background-blue]="age > 32">{{ name }}</p>
-<p [style.text-decoration]="isTextDecoration">{{ age }}</p>
-```
-
----
-
-### Event Binding
-Associa eventos do DOM a métodos do componente.
-
-```html
-<button (click)="sumAge()">+</button>
-<button (click)="subAge()">-</button>
-<input (keydown.shift)="onKeyDown($event)" />
-
-<div style="background: red; width: 300px; height: 300px; margin-top: 10px" (mousemove)="onMouseMove($event)"></div>
-```
-
----
-
-### Two-way Binding
-Permite sincronizar dados entre a view e o componente com `[(ngModel)]`.
-
-```html
-<input [(ngModel)]="name" />
-<p>{{ name }}</p>
-```
-
----
-
-### Diretivas de atributo: NgClass e NgStyle
-Aplicação dinâmica de classes e estilos com expressões condicionais.
-
-```html
-<div [ngClass]="{ 'background-red': age > 35, 'background-blue': age < 35 }">Classes condicionais.</div>
-
-<div [ngStyle]="{ 'color': age > 35 ? 'green' : 'red', 'font-size': age > 35 ? '10px' : '20px' }">Estilo dinâmico.</div>
-```
-
----
-
-### Template Variables
-Variáveis locais para acessar elementos do DOM ou componentes filhos diretamente no template.
-
-```html
-<h2 #h1>Template Variables</h2>
-<p>{{ h1.innerText }}</p>
-
-<input #name value="Sérgio Soares" />
-<p>{{ name.value }}</p>
-
-<app-new-component />
-```
-
-No componente TypeScript:
-
-```ts
-@ViewChild('name') public nameInput!: ElementRef;
-@ViewChild('h1') public nameH1!: ElementRef;
-@ViewChild('NewComponent') public childComponent!: NewComponent;
-
-ngAfterViewInit(): void {
-  console.log(this.nameInput.nativeElement.value);
-  console.log(this.nameH1.nativeElement.innerText);
-  console.log(this.childComponent.name);
-}
-```
-
----
 ## Control Flow
 
 ### Conceito
 
-O Angular oferece mecanismos para controlar o fluxo de exibição no template usando diretivas como `*ngIf`, `*ngFor`, `ng-template` e `ng-container`.
+O Angular oferece mecanismos para controlar o fluxo de exibição no template usando diretivas como `*ngIf`, `*ngFor`, `ng-template`, `ng-container` e `*ngSwitch`.
 
-Essas estruturas são utilizadas para renderizar elementos condicionalmente ou iterativamente com base nos dados do componente.
+Essas estruturas permitem mostrar elementos com base em condições ou listas de dados, deixando a interface dinâmica e reativa.
 
 ---
 
@@ -277,9 +180,7 @@ Essas estruturas são utilizadas para renderizar elementos condicionalmente ou i
 </ng-template>
 ```
 
----
-
-### Forma antiga com <ng-container>
+### Forma antiga com `<ng-container>`
 
 ```html
 <ng-container *ngIf="loadingData$ | async as data2; else loadingTpl">
@@ -313,9 +214,7 @@ Essas estruturas são utilizadas para renderizar elementos condicionalmente ou i
 </ul>
 ```
 
----
-
-### Forma antiga com <ng-container>
+### Forma antiga com `<ng-container>`
 
 ```html
 <ng-container *ngFor="let item of items; let i = index; let c = count; let f = first; let l = last; let e = even; let o = odd; trackBy: trackByFn">
@@ -331,29 +230,69 @@ Essas estruturas são utilizadas para renderizar elementos condicionalmente ou i
 
 ---
 
-### Interação com input e adição dinâmica
+### Exibição condicional com estrutura vazia
 
 ```html
-<input #name type="text" />
-<button (click)="addNewName(name.value)">Add Name</button>
+<ul>
+  @for (item of items; track item.name) {
+    <li>{{ item.name }}</li>
+  } @empty {
+    <li>Não contém valores</li>
+  }
+</ul>
 ```
 
-```ts
-public items = [
-  { name: 'Sérgio Soares' },
-  { name: 'João' }
-];
+### Alternativa antiga com `*ngIf`
 
-public addNewName(value: string) {
-  this.items.push({ name: value });
+```html
+<ul>
+  <ng-container *ngIf="items.length === 0; else itemsExist">
+    <li>Não contém valores</li>
+  </ng-container>
+
+  <ng-template #itemsExist>
+    <ng-container *ngFor="let item of items">
+      <li>{{ item.name }}</li>
+    </ng-container>
+  </ng-template>
+</ul>
+```
+
+---
+
+### Switch Case (ngSwitch)
+
+```html
+@switch (switchCondition) {
+  @case ('A') {
+    <p>Sim sua letra é: A</p>
+  }
+  @case ('B') {
+    <p>Sim sua letra é: B</p>
+  }
+  @default {
+    <p>Os dados não foram encontrados</p>
+  }
 }
 ```
 
-Esses recursos permitem desenvolver interfaces dinâmicas, reativas e com controle granular de fluxo baseado em condições e listas.
+### Forma antiga com `ngSwitch`/`ngSwitchCase`
+
+```html
+<ng-container [ngSwitch]="switchCondition">
+  <ng-container *ngSwitchCase="'A'">
+    <p>Sim sua letra é: A</p>
+  </ng-container>
+  <ng-container *ngSwitchCase="'B'">
+    <p>Sim sua letra é: B</p>
+  </ng-container>
+  <ng-container *ngSwitchDefault>
+    <p>Os dados não foram encontrados</p>
+  </ng-container>
+</ng-container>
+```
 
 ---
 
 Novos aprendizados serão adicionados conforme avanço nos estudos.
-
-
 
