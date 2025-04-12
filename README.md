@@ -11,6 +11,7 @@ Repositório com meus estudos e experimentos em Angular, incluindo exemplos prá
 5. [Control Flow](#control-flow)
 6. [Deferrable Views](#deferrable-views)
 7. [Signals](#signals)
+8. [Comunicação entre Componentes](#comunica%C3%A7%C3%A3o-entre-componentes)
 
 ---
 
@@ -552,4 +553,98 @@ Signals tornam o Angular mais previsível e com performance semelhante a bibliot
 
 ---
 
-Novos aprendizados serão adicionados conforme avanço nos estudos.
+## Comunicação entre Componentes
+
+### Conceito
+
+A comunicação entre componentes é essencial em aplicações Angular. Isso é feito principalmente por meio dos decoradores `@Input()` e `@Output()`.
+
+- `@Input()` permite passar dados de um componente pai para um componente filho.
+- `@Output()` permite que o componente filho envie eventos ou dados de volta para o componente pai.
+
+### Exemplo com `@Input()`
+
+Componente filho (`input.component.ts`):
+```ts
+@Component({
+  selector: 'app-input',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './input.component.html',
+  styleUrl: './input.component.scss'
+})
+export class InputComponent {
+  public name = signal("Sem dados");
+
+  @Input({
+    required: true,
+    transform: toUpperCase,
+  }) set inputName(value: string) {
+    this.name.set(value);
+  }
+}
+```
+
+Template (`input.component.html`):
+```html
+<h3>Input</h3>
+<p>{{ inputName }}</p>
+```
+
+### Exemplo com `@Output()`
+
+Componente filho (`output.component.ts`):
+```ts
+@Component({
+  selector: 'app-output',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './output.component.html',
+  styleUrl: './output.component.scss'
+})
+export class OutputComponent {
+  @Output() public outputName = new EventEmitter();
+
+  public sendOutputName() {
+    return this.outputName.emit("Sérgio Soares");
+  }
+}
+```
+
+Template (`output.component.html`):
+```html
+<h3>Output</h3>
+<button (click)="sendOutputName()">Send</button>
+```
+
+### Componente Pai
+
+TypeScript (`pai-ou-mae.component.ts`):
+```ts
+@Component({
+  selector: 'app-pai-ou-mae',
+  standalone: true,
+  imports: [CommonModule, InputComponent, OutputComponent],
+  templateUrl: './pai-ou-mae.component.html',
+  styleUrl: './pai-ou-mae.component.scss'
+})
+export class PaiOuMaeComponent {
+  public name = signal("Sérgio Soares");
+  public outputName = signal("Output: sem valor");
+}
+```
+
+HTML (`pai-ou-mae.component.html`):
+```html
+<h2>Comunicação entre Componentes</h2>
+<app-input [inputName]="name()" />
+<app-output (outputName)="outputName.set($event)" />
+
+<p>
+  {{ outputName }}
+</p>
+```
+
+---
+
+Essa abordagem com `@Input()` e `@Output()` facilita a troca de dados entre componentes e é amplamente utilizada em aplicações reais para garantir comunicação clara e organizada entre partes da interface.
