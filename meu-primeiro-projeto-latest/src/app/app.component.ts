@@ -8,6 +8,7 @@ import { TemplateVariablesComponent } from './components/template/template-varia
 import { TemplateControlFlowComponent } from './components/template/template-control-flow/template-control-flow.component';
 import { TemplateDeferrableViewsComponent } from './components/template/template-deferrable-views/template-deferrable-views.component';
 import { SignalsComponent } from "./components/signals/signals.component";
+import { PaiOuMaeComponent } from './components/comunicacao-entre-components/pai-ou-mae/pai-ou-mae.component';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +21,8 @@ import { SignalsComponent } from "./components/signals/signals.component";
     TemplateVariablesComponent,
     TemplateControlFlowComponent,
     TemplateDeferrableViewsComponent,
-    SignalsComponent
+    SignalsComponent,
+    PaiOuMaeComponent
 ],
   template: `
   <h1>APRENDIZADO ANGULAR</h1>
@@ -30,7 +32,8 @@ import { SignalsComponent } from "./components/signals/signals.component";
     <!-- <app-template-variables /> -->
     <!-- <app-template-control-flow /> -->
     <!--  <app-template-deferrable-views /> -->
-      <app-signals/>
+    <!-- <app-signals/> -->
+    <app-pai-ou-mae />>
   `
 })
 export class AppComponent {}
