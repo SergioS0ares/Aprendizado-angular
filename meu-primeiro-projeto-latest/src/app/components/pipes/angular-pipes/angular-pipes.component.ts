@@ -17,7 +17,7 @@ registerLocaleData(localePt);
 })
 export class AngularPipesComponent {
   public date = signal(new Date());
-  public json = signal({ name: 'Dener Troquatte' });
+  public json = signal({ name: 'Sérgio Soares' });
 
   public loadingData$: Observable<string[]> = of([
     'item 1',
