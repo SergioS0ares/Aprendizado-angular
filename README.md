@@ -12,6 +12,7 @@ Repositório com meus estudos e experimentos em Angular, incluindo exemplos prá
 6. [Deferrable Views](#deferrable-views)
 7. [Signals](#signals)
 8. [Comunicação entre Componentes](#comunica%C3%A7%C3%A3o-entre-componentes)
+9. [Pipes](#pipes)
 
 ---
 
@@ -643,6 +644,93 @@ HTML (`pai-ou-mae.component.html`):
 <p>
   {{ outputName }}
 </p>
+```
+
+---
+
+## Pipes
+
+### Conceito
+
+Em Angular, um pipe é uma função que pode ser usada para transformar dados antes de serem exibidos no template. Os pipes são usados para:
+
+- Formatar dados (datas, moedas, textos etc.)
+- Traduzir dados
+- Realizar operações simples de transformação
+
+Eles são definidos com o decorador `@Pipe()` e podem ser utilizados diretamente no HTML com o operador pipe (`|`).
+
+---
+
+### Tipos de Pipes
+
+Existem dois tipos principais de pipes:
+
+- **Pipes de transformação**: Usados para alterar ou formatar valores antes de exibi-los. São os mais comuns.
+- **Pipes de filtro**: Usados para exibir apenas um subconjunto dos dados com base em condições específicas.
+
+---
+
+### Exemplos de Uso
+
+```html
+<li>date: {{ date() | date : 'dd/MM/yyyy' }}</li>
+<li>uppercase: {{ 'Sérgio Soares' | uppercase }}</li>
+<li>lowercase: {{ 'SÉRGIO SOARES' | lowercase }}</li>
+<li>json: {{ json() | json }}</li>
+<li>async: {{ loadingData$ | async }}</li>
+<li>currency: {{ 2000.5 | currency : 'BRL' }}</li>
+<li>number: {{ 2000.5544 | number : '1.1-1' }}</li>
+<li>percent: {{ 0.155 | percent : '1.0-4' }}</li>
+```
+
+---
+
+### Criando Pipe Customizado
+
+Você pode criar seu próprio pipe para regras de formatação específicas:
+
+```ts
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'customString',
+  standalone: true,
+})
+export class CustomStringPipe implements PipeTransform {
+  transform(value: string, args?: string): string {
+    if (args === 'upper') {
+      return value.toUpperCase();
+    }
+    if (args === 'lower') {
+      return value.toLowerCase();
+    }
+    return value;
+  }
+}
+```
+
+Exemplo de uso no template:
+
+```html
+{{ 'SÉRGIO SOARES' | customString : 'lower' }}
+```
+
+---
+
+### Considerações
+
+- Pipes são eficientes para renderização, mas devem ser usados com moderação para evitar complexidade.
+- Documente bem o uso de pipes customizados.
+- Certifique-se de registrar o `LOCALE_ID` corretamente ao usar pipes como `currency`, `percent` e `date` com localizações específicas.
+
+```ts
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+
+registerLocaleData(localePt);
+
+providers: [{ provide: LOCALE_ID, useValue: 'pt-BR' }]
 ```
 
 ---
