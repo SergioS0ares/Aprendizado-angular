@@ -9,6 +9,7 @@ import { TemplateControlFlowComponent } from './components/template/template-con
 import { TemplateDeferrableViewsComponent } from './components/template/template-deferrable-views/template-deferrable-views.component';
 import { SignalsComponent } from "./components/signals/signals.component";
 import { PaiOuMaeComponent } from './components/comunicacao-entre-components/pai-ou-mae/pai-ou-mae.component';
+import { AngularPipesComponent } from './components/pipes/angular-pipes/angular-pipes.component';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +23,8 @@ import { PaiOuMaeComponent } from './components/comunicacao-entre-components/pai
     TemplateControlFlowComponent,
     TemplateDeferrableViewsComponent,
     SignalsComponent,
-    PaiOuMaeComponent
+    PaiOuMaeComponent,
+    AngularPipesComponent
 ],
   template: `
   <h1>APRENDIZADO ANGULAR</h1>
@@ -33,7 +35,8 @@ import { PaiOuMaeComponent } from './components/comunicacao-entre-components/pai
     <!-- <app-template-control-flow /> -->
     <!--  <app-template-deferrable-views /> -->
     <!-- <app-signals/> -->
-    <app-pai-ou-mae />>
+    <!-- <app-pai-ou-mae />> -->
+     <app-angular-pipes />
   `
 })
 export class AppComponent {}
