@@ -12,6 +12,7 @@ Repositório com meus estudos e experimentos em Angular, incluindo exemplos prá
 6. [Deferrable Views](#deferrable-views)
 7. [Signals](#signals)
 8. [Comunicação entre Componentes](#comunica%C3%A7%C3%A3o-entre-componentes)
+9. [Pipes](#pipes)
 
 ---
 
