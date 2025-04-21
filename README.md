@@ -13,6 +13,7 @@ Repositório com meus estudos e experimentos em Angular, incluindo exemplos prá
 7. [Signals](#signals)
 8. [Comunicação entre Componentes](#comunica%C3%A7%C3%A3o-entre-componentes)
 9. [Pipes](#pipes)
+10. [Formulários Template-driven](#formul%C3%A1rios-template-driven)
 
 ---
 
@@ -736,3 +737,145 @@ providers: [{ provide: LOCALE_ID, useValue: 'pt-BR' }]
 ---
 
 Essa abordagem com `@Input()` e `@Output()` facilita a troca de dados entre componentes e é amplamente utilizada em aplicações reais para garantir comunicação clara e organizada entre partes da interface.
+
+---
+
+## Formulários Template-driven
+
+### Conceito
+
+Formulários Template-driven são baseados no uso do atributo `ngModel`, que vincula os dados diretamente entre o template e o componente. São ideais para formulários simples e de fácil implementação.
+
+---
+
+### Exemplo 1: Campo de texto
+
+```html
+<form>
+  <label>
+    Nome:
+    <input type="text" name="inputName" [(ngModel)]="name" required />
+  </label>
+
+  <p>value: {{ name }}</p>
+</form>
+```
+
+---
+
+### Exemplo 2: Input Radio
+
+```html
+<form>
+  <label>
+    Feminino:
+    <input type="radio" name="radioSexo" value="Feminino" [(ngModel)]="sexo" required />
+  </label>
+
+  <label>
+    Masculino:
+    <input type="radio" name="radioSexo" value="Masculino" [(ngModel)]="sexo" required />
+  </label>
+
+  <label>
+    Outros:
+    <input type="radio" name="radioSexo" value="Outros" [(ngModel)]="sexo" required />
+  </label>
+
+  <p>Sexo: {{ sexo }}</p>
+</form>
+```
+
+---
+
+### Exemplo 3: Checkbox Múltiplos
+
+```html
+<form>
+  <label>
+    Angular:
+    <input type="checkbox" name="checkboxAngular" value="Angular" [(ngModel)]="techAngular" required />
+  </label>
+
+  <label>
+    Vue:
+    <input type="checkbox" name="checkboxVue" value="Vue" [(ngModel)]="techVue" required />
+  </label>
+
+  <label>
+    React:
+    <input type="checkbox" name="checkboxReact" value="React" [(ngModel)]="techReact" required />
+  </label>
+
+  <p>Angular: {{ techAngular }}</p>
+  <p>Vue: {{ techVue }}</p>
+  <p>React: {{ techReact }}</p>
+</form>
+```
+
+---
+
+### Exemplo 4: Select dinâmico
+
+```html
+<form>
+  <select name="selectComidas" [(ngModel)]="comidas">
+    <option value="">Selecione uma opção</option>
+    <option *ngFor="let item of listComidas" [ngValue]="item">
+      {{ item.comida }}
+    </option>
+  </select>
+
+  <p>{{ comidas | json }}</p>
+  <p>Comida: {{ comidas?.comida }}</p>
+  <p>Preço: {{ comidas?.preco }}</p>
+</form>
+```
+
+```ts
+export class TemplateDrivenFormsComponent {
+  public listComidas = [
+    { comida: 'X-salada', preco: 'R$ 10' },
+    { comida: 'X-bacon', preco: 'R$ 11' },
+    { comida: 'Coxinha', preco: 'R$ 6' },
+  ];
+}
+```
+
+---
+
+### Exemplo 5: Envio do formulário
+
+```html
+<form #ngForm="ngForm" (ngSubmit)="submitForm(ngForm)">
+  <!-- Campos aqui -->
+  <button [disabled]="!ngForm.valid">Send</button>
+</form>
+
+<p>Form Valid: {{ ngForm.valid }}</p>
+<p>Form Value: {{ ngForm.value | json }}</p>
+```
+
+```ts
+public submitForm(form: NgForm): void {
+  console.log(form.valid);
+  if (form.valid) {
+    console.log(form.value);
+  }
+}
+```
+
+---
+
+### Vantagens
+
+- Fácil de implementar para formulários simples
+- Rápido para prototipagem
+- Menos código no componente (lógica no template)
+
+### Desvantagens
+
+- Difícil manutenção em formulários complexos
+- Menos controle sobre validações personalizadas
+
+> Use Template-driven para formulários pequenos e comece a migrar para Reactive Forms conforme o crescimento e complexidade aumentam.
