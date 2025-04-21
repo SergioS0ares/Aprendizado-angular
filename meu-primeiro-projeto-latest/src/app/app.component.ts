@@ -41,8 +41,8 @@ import { TemplateDrivenFormsComponent } from './components/forms/template-driven
     <!-- <app-signals/> -->
     <!-- <app-pai-ou-mae />> -->
     <!-- <app-angular-pipes /> -->
-    <!-- <app-reactive-forms /> -->
-     <app-template-binding />
+     <app-reactive-forms />
+    <!-- <app-template-driven-forms /> -->
 
   `
 })

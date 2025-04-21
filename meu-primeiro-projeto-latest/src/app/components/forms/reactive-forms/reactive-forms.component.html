@@ -1,1 +1,61 @@
-<h2> Reactive-forms </h2>
+<h2>Reactive forms</h2>
+<form [formGroup]="profileForm" (ngSubmit)="submit()">
+  <label>
+    Nome:
+    <input type="text" formControlName="name" />
+  </label>
+
+  <hr />
+  <h3>[formGroup] = profileForm</h3>
+  <p>value: {{ profileForm.value | json }}</p>
+  <p>valid: {{ profileForm.valid }}</p>
+  <p>dirty: {{ profileForm.dirty }}</p>
+  <p>touched: {{ profileForm.touched }}</p>
+  <hr />
+
+  <h3>[formControlName] = name</h3>
+  <p>value: {{ profileForm.get("name")?.value }}</p>
+  <p>valid: {{ profileForm.get("name")?.valid }}</p>
+  <p>errors: {{ profileForm.get("name")?.errors | json }}</p>
+  <p>dirty: {{ profileForm.get("name")?.dirty }}</p>
+  <p>touched: {{ profileForm.get("name")?.touched }}</p>
+  <hr />
+
+  <div formGroupName="myStacks">
+    <label>
+      Front:
+      <input type="text" formControlName="front" />
+      <p>value: {{ profileForm.value.myStacks?.front }}</p>
+    </label>
+
+    <label>
+      Back:
+      <input type="text" formControlName="back" />
+      <p>value: {{ profileForm.value.myStacks?.back }}</p>
+    </label>
+  </div>
+
+  <button type="button" (click)="update()">Update</button>
+
+  <hr />
+  <label>
+    New Food
+    <input #newFood type="text" />
+  </label>
+
+  <button type="button" (click)="addMyFavoriteFoods(newFood.value)">Add</button>
+
+  <hr />
+
+  <div formArrayName="myFavoriteFoods">
+    @for(food of profileForm.value.myFavoriteFoods; track i; let i = $index){
+    <label>
+      {{ i }} - {{ food }}:
+      <input type="text" [formControlName]="i" />
+    </label>
+    <hr />
+    }
+  </div>
+
+  <button [disabled]="!profileForm.valid">Submit</button>
+</form>
