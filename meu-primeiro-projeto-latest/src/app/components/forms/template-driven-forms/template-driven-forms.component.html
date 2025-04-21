@@ -1,0 +1,135 @@
+<!--
+Ele é útil para adicionar um formulário simples a um
+aplicativo, como um formulário de inscrição em uma lista de e-mail.
+
+É mais fácil de adicionar a um aplicativo, mas não são escalonáveis
+tão bem quanto os formulários reativos.
+-->
+
+<h2>Template-driven forms</h2>
+<form #form="ngForm" (ngSubmit)="submitForm(form)">
+  <!-- Campo de texto -->
+  <label>
+    Nome:
+    <input
+      type="text"
+      name="inputName"
+      [(ngModel)]="nome"
+      #nome="ngModel"
+      required
+    />
+  </label>
+  <br />
+  <p>value: {{ nome.value }}</p>
+  <p>valid: {{ nome.valid }}</p>
+  <p>dirty: {{ nome.dirty }}</p>
+  <p>touched: {{ nome.touched }}</p>
+
+  <hr />
+
+  <!-- Radio buttons -->
+  <label>
+    Feminino:
+    <input
+      type="radio"
+      value="Feminino"
+      name="radioSexo"
+      [(ngModel)]="sexo.value"
+      required
+      #sexo="ngModel"
+    />
+  </label>
+
+  <label>
+    Masculino:
+    <input
+      type="radio"
+      value="Masculino"
+      name="radioSexo"
+      [(ngModel)]="sexo.value"
+      required
+    />
+  </label>
+
+  <label>
+    Outros:
+    <input
+      type="radio"
+      value="Outros"
+      name="radioSexo"
+      [(ngModel)]="sexo.value"
+      required
+    />
+  </label>
+
+  <br />
+  <p>value: {{ sexo.value }}</p>
+  <p>valid: {{ sexo.valid }}</p>
+  <p>dirty: {{ sexo.dirty }}</p>
+  <p>touched: {{ sexo.touched }}</p>
+
+  <hr />
+
+  <!-- Checkbox Angular -->
+  <label>
+    Angular:
+    <input
+      type="checkbox"
+      name="checkboxAngular"
+      value="Angular"
+      [(ngModel)]="techAngular.value"
+      required
+      #techAngular="ngModel"
+    />
+  </label>
+
+  <!-- Checkbox Vue -->
+  <label>
+    Vue:
+    <input
+      type="checkbox"
+      name="checkboxVue"
+      value="Vue"
+      [(ngModel)]="techVue.value"
+      required
+      #techVue="ngModel"
+    />
+  </label>
+
+  <br />
+  <p>value Angular: {{ techAngular.value }}</p>
+  <p>valid: {{ techAngular.valid }}</p>
+  <p>dirty: {{ techAngular.dirty }}</p>
+  <p>touched: {{ techAngular.touched }}</p>
+
+  <p>value Vue: {{ techVue.value }}</p>
+  <p>valid: {{ techVue.valid }}</p>
+  <p>dirty: {{ techVue.dirty }}</p>
+  <p>touched: {{ techVue.touched }}</p>
+
+  <hr />
+
+  <!-- Select de comidas -->
+  <select name="selectComidas" #comidas="ngModel" [(ngModel)]="comidas">
+    <option value="">Selecione um alimento</option>
+    <option *ngFor="let item of listaComidas(); track item" [ngValue]="item">
+      {{ item.comida }}
+    </option>
+  </select>
+
+  <br />
+  <p>value: {{ comidas.value | json }}</p>
+  <p>Comida: {{ comidas.value.comida }}</p>
+  <p>Preço: {{ comidas.value.preco }}</p>
+  <p>valid: {{ comidas.valid }}</p>
+  <p>dirty: {{ comidas.dirty }}</p>
+  <p>touched: {{ comidas.touched }}</p>
+
+  <hr />
+
+  <button [disabled]="!form.valid">Send</button>
+
+</form>
+
+<p>Form Valid: {{ form.valid }}</p>
+<p>Form Value: {{ form.value | json }}</p>
