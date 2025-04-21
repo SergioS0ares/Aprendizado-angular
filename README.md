@@ -14,6 +14,7 @@ Repositório com meus estudos e experimentos em Angular, incluindo exemplos prá
 8. [Comunicação entre Componentes](#comunica%C3%A7%C3%A3o-entre-componentes)
 9. [Pipes](#pipes)
 10. [Formulários Template-driven](#formul%C3%A1rios-template-driven)
+11. [Reactive Forms](#reactive-forms)
 
 ---
 
@@ -879,3 +880,127 @@ public submitForm(form: NgForm): void {
 - Menos controle sobre validações personalizadas
 
 > Use Template-driven para formulários pequenos e comece a migrar para Reactive Forms conforme o crescimento e complexidade aumentam.
+
+---
+
+## Reactive Forms
+
+### Conceito
+
+Formulários Reactive são baseados em modelos e oferecem controle total sobre o estado e comportamento dos campos do formulário. Utilizam `FormControl`, `FormGroup`, `FormArray` e o serviço `FormBuilder` para criação e manipulação de formulários.
+
+---
+
+### Criação de campos com `FormControl`
+
+```ts
+const name = new FormControl('');
+```
+
+---
+
+### Agrupamento de campos com `FormGroup`
+
+```ts
+const profileForm = new FormGroup({
+  name: new FormControl(''),
+  email: new FormControl('')
+});
+```
+
+---
+
+### Listas dinâmicas com `FormArray`
+
+```ts
+const myFavoriteFoods = new FormArray([
+  new FormControl('X-tudo')
+]);
+```
+
+---
+
+### Uso de `FormBuilder` para simplificar a criação de formulários
+
+```ts
+constructor(private fb: FormBuilder) {}
+
+profileForm = this.fb.group({
+  name: [''],
+  myStacks: this.fb.group({
+    front: ['Angular'],
+    back: ['NodeJs'],
+  }),
+  myFavoriteFoods: this.fb.array([['X-tudo']])
+});
+```
+
+---
+
+### Acesso a propriedades como `value`, `valid`, `dirty` e `touched`
+
+```html
+<p>value: {{ profileForm.value | json }}</p>
+<p>valid: {{ profileForm.valid }}</p>
+<p>dirty: {{ profileForm.dirty }}</p>
+<p>touched: {{ profileForm.touched }}</p>
+```
+
+---
+
+### Validações nativas com `Validators` (ex: `required`, `minLength`, `maxLength`)
+
+```ts
+name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(10)]]
+```
+
+---
+
+### Criação de `Custom Validators`
+
+```ts
+function textValidator(): ValidatorFn {
+  return (control: AbstractControl) => {
+    const hasUpperCase = /[A-Z]/.test(control.value);
+    const hasNumber = /[0-9]/.test(control.value);
+    return hasUpperCase && hasNumber ? null : { textValidator: true };
+  };
+}
+```
+
+Uso:
+
+```ts
+name: ['', [Validators.required, textValidator()]]
+```
+
+---
+
+### Adição dinâmica de campos no `FormArray`
+
+```ts
+public addMyFavoriteFoods(newFood: string) {
+  const myFavoriteFoods = this.profileForm.get('myFavoriteFoods') as FormArray;
+  myFavoriteFoods.push(new FormControl(newFood));
+}
+```
+
+---
+
+### Validação de formulário antes do envio (`submit()`)
+
+```ts
+public submit() {
+  if (this.profileForm.valid) {
+    console.log(this.profileForm.value);
+  }
+}
+```
+
+---
+
+### Considerações finais
+
+Apesar de mais verboso que Template-driven, o Reactive Forms fornece muito mais poder, controle e testabilidade para aplicações maiores ou mais exigentes.
+
+
