@@ -15,6 +15,9 @@ Repositório com meus estudos e experimentos em Angular, incluindo exemplos prá
 9. [Pipes](#pipes)
 10. [Formulários Template-driven](#formul%C3%A1rios-template-driven)
 11. [Reactive Forms](#reactive-forms)
+12. [Host Elements](#host-elements)
+13. [Ciclo de Vida dos Componentes](#ciclo-de-vida-dos-componentes)
+14. [Melhorias de Configuração (Alias e Schematics)](#melhorias-de-configura%C3%A7%C3%A3o-alias-e-schematics)
 
 ---
 
