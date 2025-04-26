@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 
-import { NewComponent } from './components/new-component/new-component.component';
+import { NewComponent } from '@components/new-component/new-component.component';
 import { TemplateBindingComponent } from './components/template/template-binding/template-binding.component';
 import { TemplateVariablesComponent } from './components/template/template-variables/template-variables.component';
 import { TemplateControlFlowComponent } from './components/template/template-control-flow/template-control-flow.component';
@@ -13,8 +13,9 @@ import { AngularPipesComponent } from './components/pipes/angular-pipes/angular-
 import { ReactiveFormsComponent } from './components/forms/reactive-forms/reactive-forms.component';
 import { TemplateDrivenFormsComponent } from './components/forms/template-driven-forms/template-driven-forms.component';
 import { ContentComponent } from './components/content/content.component';
-import { HostElementsComponent } from './components/host-components/host-elements.component';
+import { HostElementsComponent } from './components/host-elements/host-elements.component';
 import { LifeCycleComponent } from './components/life-cycle/life-cycle.component';
+import { environment } from 'environments/environment.development';
 
 @Component({
   selector: 'app-root',
@@ -92,5 +93,9 @@ import { LifeCycleComponent } from './components/life-cycle/life-cycle.component
     -->
   `
 })
-export class AppComponent {}
+export class AppComponent {
+  constructor() {
+    console.log(environment.env); // Exibe 'dev', 'hom' ou 'prod' no console
+  }
+}
 
