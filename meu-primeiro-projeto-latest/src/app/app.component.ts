@@ -12,6 +12,9 @@ import { PaiOuMaeComponent } from './components/comunicacao-entre-components/pai
 import { AngularPipesComponent } from './components/pipes/angular-pipes/angular-pipes.component';
 import { ReactiveFormsComponent } from './components/forms/reactive-forms/reactive-forms.component';
 import { TemplateDrivenFormsComponent } from './components/forms/template-driven-forms/template-driven-forms.component';
+import { ContentComponent } from './components/content/content.component';
+import { HostElementsComponent } from './components/host-components/host-elements.component';
+import { LifeCycleComponent } from './components/life-cycle/life-cycle.component';
 
 @Component({
   selector: 'app-root',
@@ -28,7 +31,10 @@ import { TemplateDrivenFormsComponent } from './components/forms/template-driven
     PaiOuMaeComponent,
     AngularPipesComponent,
     ReactiveFormsComponent,
-    TemplateDrivenFormsComponent
+    TemplateDrivenFormsComponent,
+    ContentComponent,
+    HostElementsComponent,
+    LifeCycleComponent
 ],
   template: `
   <h1>APRENDIZADO ANGULAR</h1>
@@ -41,9 +47,50 @@ import { TemplateDrivenFormsComponent } from './components/forms/template-driven
     <!-- <app-signals/> -->
     <!-- <app-pai-ou-mae />> -->
     <!-- <app-angular-pipes /> -->
-     <app-reactive-forms />
+    <!--  <app-reactive-forms /> -->
     <!-- <app-template-driven-forms /> -->
+    <!--
+    <app-content>
+     <header id="header">
+      <p>Header</p>
+     </header>
 
+      <p text>Text</p>
+      <p text>Text</p>
+
+     <footer class="footer">
+      <p>Footer</p>
+     </footer>
+    </app-content>
+ -->
+ <!--<app-host-elements /> -->
+ <!--
+      *******************************************
+      // Adicione esses itens dentro do app Component
+      *******************************************
+      public number = signal(1);
+      public boolean = true;
+
+      ngOnInit(): void {
+        setInterval(() => {
+          this.number.update((oldValue) => {
+            return oldValue + 1;
+          });
+        }, 1000);
+      }
+
+      *******************************************
+      // Adicione esses itens dentro do HTML
+      *******************************************
+      @if(boolean){
+      <app-life-cycle [inputMyNumber]="number()">
+        <p #text>Text</p>
+      </app-life-cycle>
+      }
+
+      <button (click)="boolean = !boolean">Destroy Component</button>
+    -->
   `
 })
 export class AppComponent {}
+
