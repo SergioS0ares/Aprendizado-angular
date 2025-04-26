@@ -4,20 +4,21 @@ Repositório com meus estudos e experimentos em Angular, incluindo exemplos prá
 
 ## Sumário
 
-1. [Configuração Inicial](#configura%C3%A7%C3%A3o-inicial)
+1. [Configuração Inicial](#configuração-inicial)
 2. [Componentes](#componentes)
 3. [Estilos e SCSS](#estilos-e-scss)
 4. [Template HTML e Bindings](#template-html-e-bindings)
 5. [Control Flow](#control-flow)
 6. [Deferrable Views](#deferrable-views)
 7. [Signals](#signals)
-8. [Comunicação entre Componentes](#comunica%C3%A7%C3%A3o-entre-componentes)
+8. [Comunicação entre Componentes](#comunicação-entre-componentes)
 9. [Pipes](#pipes)
-10. [Formulários Template-driven](#formul%C3%A1rios-template-driven)
+10. [Formulários Template-driven](#formulários-template-driven)
 11. [Reactive Forms](#reactive-forms)
 12. [Host Elements](#host-elements)
 13. [Ciclo de Vida dos Componentes](#ciclo-de-vida-dos-componentes)
-14. [Melhorias de Configuração (Alias e Schematics)](#melhorias-de-configura%C3%A7%C3%A3o-alias-e-schematics)
+14. [Melhorias de Configuração (Alias e Schematics)](#melhorias-de-configuração-alias-e-schematics)
+15. [Gerenciamento de Ambientes](#gerenciamento-de-ambientes)
 
 ---
 
@@ -1219,5 +1220,89 @@ Essas configurações garantem que novos componentes venham por padrão:
 - Com `display: block` no seletor
 
 ---
+
+## Gerenciamento de Ambientes
+
+### Conceito
+
+O Angular permite a configuração de múltiplos ambientes (desenvolvimento, homologação e produção) utilizando arquivos de environment. Isso facilita a troca de URLs de APIs, imagens e outras variáveis sensíveis conforme o estágio do projeto, sem precisar alterar o código-fonte manualmente.
+
+### Estrutura de Arquivos
+
+Dentro da pasta `src/environments/` foram criados:
+
+- `environment.development.ts` (desenvolvimento)
+- `environment.homologation.ts` (homologação)
+- `environment.ts` (produção)
+
+Cada arquivo define constantes específicas para cada ambiente.
+
+### Exemplo de Código
+
+```typescript
+// environment.development.ts
+export const environment = {
+  env: 'dev',
+  apiTask: 'https://us-central1-curso-de-angular-api.cloudfunctions.net/app/tasks',
+  img: 'http://localhost:4200/assets/',
+};
+```
+
+```typescript
+// environment.homologation.ts
+export const environment = {
+  env: 'hom',
+  apiTask: 'https://us-central1-curso-de-angular-api.cloudfunctions.net/app/tasks',
+  img: 'http://localhost:4200/assets/',
+};
+```
+
+```typescript
+// environment.ts
+export const environment = {
+  env: 'prod',
+  apiTask: 'https://us-central1-curso-de-angular-api.cloudfunctions.net/app/tasks',
+  img: 'http://localhost:4200/assets/',
+};
+```
+
+### Como funciona
+
+O Angular utiliza o `angular.json` para configurar **fileReplacements** conforme o ambiente de build:
+
+```json
+"fileReplacements": [
+  {
+    "replace": "src/environments/environment.ts",
+    "with": "src/environments/environment.development.ts"
+  }
+]
+```
+
+Além disso, foram criados scripts no `package.json` para facilitar o build:
+
+```json
+"scripts": {
+  "start": "ng serve",
+  "build": "ng build",
+  "build:hom": "ng build --configuration homologation",
+  "watch": "ng build --watch --configuration development",
+  "test": "ng test"
+}
+```
+
+Assim, podemos acessar os dados do ambiente dentro do projeto:
+
+```typescript
+import { environment } from '../environments/environment';
+
+export class AppComponent {
+  constructor() {
+    console.log(environment.env); // Exibe 'dev', 'hom' ou 'prod' no console
+  }
+}
+```
+
+Essa estratégia permite separar configurações específicas de ambiente sem precisar alterar manualmente o código-fonte, melhorando a escalabilidade e manutenção do projeto.
 
 
