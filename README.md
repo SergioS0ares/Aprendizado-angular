@@ -1006,4 +1006,218 @@ public submit() {
 
 Apesar de mais verboso que Template-driven, o Reactive Forms fornece muito mais poder, controle e testabilidade para aplicações maiores ou mais exigentes.
 
+---
+
+## Host Elements
+
+### Conceito
+
+Host Elements permitem controlar atributos e eventos diretamente no elemento que hospeda o componente, usando `@HostBinding` e `@HostListener`.
+
+- **@HostBinding**: Faz a ligação de propriedades (atributos) diretamente no elemento host.
+- **@HostListener**: Escuta eventos DOM no elemento host ou no documento.
+
+### Exemplo Prático
+
+```ts
+@Component({
+  selector: 'app-host-elements',
+  standalone: true,
+  template: `<p>Host elements</p>`
+})
+export class HostElementsComponent {
+
+  @HostBinding('attr.class')
+  public class = 'vidaFullStack';
+
+  @HostListener('document:keypress', ['$event'])
+  public updateHostListener(event: KeyboardEvent) {
+    console.log(event);
+  }
+
+  @HostListener('click', ['$event'])
+  public updateClick() {
+    alert('Denner Troquatte');
+  }
+}
+```
+
+---
+
+## Ciclo de Vida dos Componentes
+
+### Conceito
+
+O ciclo de vida no Angular é composto por uma série de eventos que ocorrem durante o ciclo de vida de um componente ou diretiva. Esses eventos permitem que você controle o comportamento e a execução de código em diferentes estágios da vida de um componente. Entender e utilizar esses métodos é fundamental para controlar o comportamento e o estado dos seus componentes Angular de forma eficaz.
+
+### Hooks do Ciclo de Vida
+
+1. **ngOnChanges**
+
+   - **Para que serve**: Este método é chamado sempre que um valor de entrada (`@Input`) de um componente muda.
+   - **Explicação**: É útil para reagir a mudanças nos dados de entrada e atualizar o estado interno do componente.
+   
+```ts
+ngOnChanges(changes: SimpleChanges): void {
+  console.log('ngOnChanges', changes);
+}
+```
+
+2. **ngOnInit**
+
+   - **Para que serve**: É chamado uma única vez após a inicialização do componente.
+   - **Explicação**: Ideal para realizar inicializações como buscar dados de um serviço.
+
+```ts
+ngOnInit(): void {
+  console.log('ngOnInit');
+}
+```
+
+3. **ngDoCheck**
+
+   - **Para que serve**: Chamado durante cada ciclo de detecção de mudanças.
+   - **Explicação**: Permite verificações manuais em objetos complexos.
+
+```ts
+ngDoCheck(): void {
+  console.log('ngDoCheck');
+}
+```
+
+4. **ngAfterContentInit**
+
+   - **Para que serve**: Chamado após a projeção de conteúdo externo (`ng-content`).
+   - **Explicação**: Útil para acessar elementos projetados.
+
+```ts
+ngAfterContentInit(): void {
+  console.log('ngAfterContentInit');
+}
+```
+
+5. **ngAfterContentChecked**
+
+   - **Para que serve**: Após cada verificação do conteúdo projetado.
+   - **Explicação**: Permite reações baseadas em mudanças no conteúdo externo.
+
+```ts
+ngAfterContentChecked(): void {
+  console.log('ngAfterContentChecked');
+}
+```
+
+6. **ngAfterViewInit**
+
+   - **Para que serve**: Chamado após a inicialização da view e views filhas.
+   - **Explicação**: Ideal para interagir com o DOM.
+
+```ts
+ngAfterViewInit(): void {
+  console.log('ngAfterViewInit');
+}
+```
+
+7. **ngAfterViewChecked**
+
+   - **Para que serve**: Após cada verificação da view.
+   - **Explicação**: Pode ser usado para ações baseadas no estado da view.
+
+```ts
+ngAfterViewChecked(): void {
+  console.log('ngAfterViewChecked');
+}
+```
+
+8. **ngOnDestroy**
+
+   - **Para que serve**: Antes da destruição do componente.
+   - **Explicação**: Ideal para limpeza de recursos e cancelamento de observables.
+
+```ts
+ngOnDestroy(): void {
+  console.log('ngOnDestroy');
+}
+```
+
+### Representação Visual (Execução)
+
+Durante a inicialização:
+
+```plaintext
+constructor()
+↓
+ngOnChanges()
+↓
+ngOnInit()
+↓
+ngDoCheck()
+↓
+ngAfterContentInit()
+↓
+ngAfterContentChecked()
+↓
+ngAfterViewInit()
+↓
+ngAfterViewChecked()
+```
+
+Durante atualizações posteriores:
+
+```plaintext
+ngOnChanges()
+↓
+ngDoCheck()
+↓
+ngAfterContentChecked()
+↓
+ngAfterViewChecked()
+```
+
+Na destruição:
+
+```plaintext
+ngOnDestroy()
+```
+
+---
+
+## Melhorias de Configuração (Alias e Schematics)
+
+### tsconfig.json - Criação de Alias
+
+```json
+"compilerOptions": {
+  "baseUrl": "./src",
+  "paths": {
+    "@components/*": ["app/components/*"],
+    "@pipes/*": ["app/pipes/*"]
+  }
+}
+```
+
+Agora podemos importar componentes assim:
+
+```ts
+import { NewComponent } from '@components/new-component/new-component.component';
+```
+
+### angular.json - Configuração de Schematics
+
+```json
+"@schematics/angular:component": {
+  "style": "scss",
+  "changeDetection": "OnPush",
+  "displayBlock": true
+}
+```
+
+Essas configurações garantem que novos componentes venham por padrão:
+
+- Com arquivos `.scss`
+- Com `ChangeDetectionStrategy.OnPush`
+- Com `display: block` no seletor
+
+---
+
 
