@@ -16,6 +16,7 @@ import { ContentComponent } from './components/content/content.component';
 import { HostElementsComponent } from './components/host-elements/host-elements.component';
 import { LifeCycleComponent } from './components/life-cycle/life-cycle.component';
 import { environment } from 'environments/environment.development';
+import { ConsumeServiceComponent } from '@components/consume-service/consume-service.component';
 
 @Component({
   selector: 'app-root',
@@ -35,7 +36,8 @@ import { environment } from 'environments/environment.development';
     TemplateDrivenFormsComponent,
     ContentComponent,
     HostElementsComponent,
-    LifeCycleComponent
+    LifeCycleComponent,
+    ConsumeServiceComponent
 ],
   template: `
   <h1>APRENDIZADO ANGULAR</h1>
@@ -91,6 +93,8 @@ import { environment } from 'environments/environment.development';
 
       <button (click)="boolean = !boolean">Destroy Component</button>
     -->
+
+    <app-consume-service/>
   `
 })
 export class AppComponent {
