@@ -19,6 +19,7 @@ Repositório com meus estudos e experimentos em Angular, incluindo exemplos prá
 13. [Ciclo de Vida dos Componentes](#ciclo-de-vida-dos-componentes)
 14. [Melhorias de Configuração (Alias e Schematics)](#melhorias-de-configuração-alias-e-schematics)
 15. [Gerenciamento de Ambientes](#gerenciamento-de-ambientes)
+16. [Services e Consumo de APIs](#services-e-consumo-de-apis)
 
 ---
 
@@ -1305,4 +1306,205 @@ export class AppComponent {
 
 Essa estratégia permite separar configurações específicas de ambiente sem precisar alterar manualmente o código-fonte, melhorando a escalabilidade e manutenção do projeto.
 
+---
+
+## Serviços (Services)
+
+### Conceito
+
+No Angular, **Services** (ou Serviços) são classes responsáveis por **compartilhar lógica, dados e funcionalidades entre componentes**. Eles permitem que a lógica de negócio, requisições HTTP, manipulação de estados e interações com APIs sejam separadas do código do componente. Isso torna o código mais limpo, reutilizável e fácil de testar.
+
+---
+
+### Vantagens dos Serviços
+
+* 🔁 **Reutilização de código**: Um único serviço pode ser usado por vários componentes.
+* 🧠 **Separação de responsabilidades**: A lógica de negócios fica isolada do componente.
+* 🧪 **Facilidade de testes**: É possível testar o serviço de forma independente.
+* 📦 **Organização**: Centraliza o acesso a dados e funcionalidades.
+
+---
+
+### Quando usar um Serviço?
+
+* Acessar dados de uma API ou banco de dados.
+* Compartilhar dados entre componentes.
+* Realizar lógica de negócio, validações ou cálculos.
+* Manipular cache, autenticação ou autorização.
+
+---
+
+## Exemplo de Serviço com Requisições HTTP
+
+Criação da interface `ITask`:
+
+```ts
+interface ITask {
+  id: string;
+  title: string;
+}
+```
+
+---
+
+### 🔹 HttpClient + GET
+
+O método GET busca **dados do servidor**.
+
+```ts
+public httpTaskList$(): Observable<ITask[]> {
+  const params = new HttpParams().set('page', '1');
+
+  return this.#http.get<ITask[]>(this.#url(), { params }).pipe(
+    tap((res) => this.#setTaskList.set(res)),
+    catchError((error: HttpErrorResponse) => {
+      this.#setTaskListError.set(error.error.message);
+      return throwError(() => error);
+    })
+  );
+}
+```
+
+> Esse método retorna uma lista de tarefas da API e atualiza o signal com os dados ou o erro.
+
+---
+
+### 🔹 GET por ID
+
+Busca **um item específico** pela URL com `id`.
+
+```ts
+public httpTaskId$(id: string): Observable<ITask> {
+  return this.#http.get<ITask>(`${this.#url()}/${id}`).pipe(
+    tap((res) => this.#setTaskId.set(res)),
+    catchError((error: HttpErrorResponse) => {
+      this.#setTaskIdError.set(error.error.message);
+      return throwError(() => error);
+    })
+  );
+}
+```
+
+---
+
+### 🔹 POST
+
+Usado para **criar um novo item** no backend.
+
+```ts
+public httpTaskCreate$(title: string): Observable<ITask> {
+  return this.#http.post<ITask>(this.#url(), { title }).pipe(
+    catchError((error: HttpErrorResponse) => {
+      this.#setTaskCreateError.set(error.error.message);
+      return throwError(() => error);
+    })
+  );
+}
+```
+
+---
+
+### 🔹 PATCH
+
+Utilizado para **atualizar parcialmente** um recurso.
+
+```ts
+public httpTaskUpdate$(id: string, title: string): Observable<ITask> {
+  return this.#http.patch<ITask>(`${this.#url()}/${id}`, { title }).pipe(
+    catchError((error: HttpErrorResponse) => {
+      this.#setTaskUpdateError.set(error.error.message);
+      return throwError(() => error);
+    })
+  );
+}
+```
+
+---
+
+### 🔹 DELETE
+
+Remove um item específico da API.
+
+```ts
+public httpTaskDelete$(id: string): Observable<void> {
+  return this.#http.delete<void>(`${this.#url()}/${id}`, {}).pipe(
+    catchError((error: HttpErrorResponse) => {
+      this.#setTaskDeleteError.set(error.error.message);
+      return throwError(() => error);
+    })
+  );
+}
+```
+
+---
+
+## 🛡️ Interceptors + Retry
+
+Interceptores permitem **interceptar requisições e respostas** para:
+
+* Adicionar cabeçalhos (tokens, metadata etc)
+* Repetir requisições automaticamente (retry)
+* Centralizar tratamento de erros
+
+### Exemplo de Interceptor
+
+```ts
+export const httpInterceptor: HttpInterceptorFn = (req, next) => {
+  const headers = new HttpHeaders().set('x-vida-full-stack', 'dev');
+  const reqClone = req.clone({ headers });
+
+  return next(reqClone).pipe(
+    shareReplay(),
+    retry({ count: 2, delay: 1000 }),
+    catchError((error: HttpErrorResponse) => {
+      return throwError(() => error);
+    })
+  );
+};
+```
+
+---
+
+## 🧪 Consumindo os Serviços em Componentes
+
+```ts
+@Component({ ... })
+export class ConsumeServiceComponent implements OnInit {
+  #apiService = inject(ApiService);
+
+  public getTaskList = this.#apiService.getTaskList;
+  public getTaskId = this.#apiService.getTaskId;
+
+  ngOnInit(): void {
+    this.#apiService.httpTaskList$().subscribe();
+    this.#apiService.httpTaskId$('ID_DO_ITEM').subscribe();
+  }
+
+  public httpTaskCreate(title: string) {
+    this.#apiService.httpTaskCreate$(title)
+      .pipe(concatMap(() => this.#apiService.httpTaskList$()))
+      .subscribe();
+  }
+
+  public httpTaskUpdate(id: string, title: string) {
+    this.#apiService.httpTaskUpdate$(id, title)
+      .pipe(concatMap(() => this.#apiService.httpTaskList$()))
+      .subscribe();
+  }
+
+  public httpTaskDelete(id: string) {
+    this.#apiService.httpTaskDelete$(id)
+      .pipe(concatMap(() => this.#apiService.httpTaskList$()))
+      .subscribe();
+  }
+}
+```
+
+---
+
+### 🧠 Considerações Finais
+
+* Os serviços ajudam a manter seus componentes **enxutos** e focados apenas na exibição da interface.
+* O uso de `signal()` junto com `Observable` torna seu fluxo de dados reativo e muito performático.
+* A organização da camada de serviços facilita **testes, manutenção e escalabilidade** da aplicação.
 
