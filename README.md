@@ -19,7 +19,7 @@ Repositório com meus estudos e experimentos em Angular, incluindo exemplos prá
 13. [Ciclo de Vida dos Componentes](#ciclo-de-vida-dos-componentes)
 14. [Melhorias de Configuração (Alias e Schematics)](#melhorias-de-configuração-alias-e-schematics)
 15. [Gerenciamento de Ambientes](#gerenciamento-de-ambientes)
-16. [Services e Consumo de APIs](#services-e-consumo-de-apis)
+16. [Services e Consumo de APIs](#services)
 
 ---
 
