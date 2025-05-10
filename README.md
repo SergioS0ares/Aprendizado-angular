@@ -20,6 +20,7 @@ Repositório com meus estudos e experimentos em Angular, incluindo exemplos prá
 14. [Melhorias de Configuração (Alias e Schematics)](#melhorias-de-configuração-alias-e-schematics)
 15. [Gerenciamento de Ambientes](#gerenciamento-de-ambientes)
 16. [Services e Consumo de APIs](#services)
+17. [Rotas](#rotas)
 
 ---
 
@@ -1507,4 +1508,133 @@ export class ConsumeServiceComponent implements OnInit {
 * Os serviços ajudam a manter seus componentes **enxutos** e focados apenas na exibição da interface.
 * O uso de `signal()` junto com `Observable` torna seu fluxo de dados reativo e muito performático.
 * A organização da camada de serviços facilita **testes, manutenção e escalabilidade** da aplicação.
+
+---
+
+## Rotas
+
+### Conceito
+
+Rotas no Angular permitem controlar a navegação entre páginas/componentes com base nas URLs da aplicação. Elas ajudam a tornar a estrutura da aplicação mais modular, reutilizável e escalável.
+
+### Vantagens
+
+* Organização da navegação e estrutura do projeto.
+* Modularização de funcionalidades.
+* Suporte a Lazy Loading, parâmetros dinâmicos, rotas coringa e mais.
+
+### Navegando entre páginas
+
+Permite a navegação entre diferentes componentes via `<a routerLink>`:
+
+```html
+<a routerLink="/home" routerLinkActive="active">Home</a>
+<a routerLink="/sobre" routerLinkActive="active">Sobre</a>
+```
+
+Definindo as rotas:
+
+```ts
+export const routes: Routes = [
+  { path: '', component: HomeComponent },
+  { path: 'sobre', component: SobreComponent }
+];
+```
+
+### Parâmetros de rota
+
+Parâmetros de rota permitem passar informações dinâmicas via URL. Exemplo: `/curso/10`
+
+```ts
+{ path: 'curso/:id', component: CursoComponent }
+```
+
+Para acessar no componente:
+
+```ts
+constructor(private route: ActivatedRoute) {
+  this.route.params.subscribe(params => console.log(params['id']));
+}
+```
+
+### Rota Coringa (404)
+
+Usada para capturar rotas inválidas e direcionar para uma página de erro.
+
+```ts
+{ path: '**', component: NotFoundComponent }
+```
+
+### Rotas filhas
+
+Permitem estruturar rotas aninhadas, úteis para dashboards, páginas com abas, etc.
+
+```ts
+{ 
+  path: 'curso', 
+  children: [
+    { path: '', component: CursoListComponent },
+    { path: ':id', component: CursoDetailComponent }
+  ]
+}
+```
+
+### Lazy Load Component
+
+Carrega componentes de forma assíncrona, reduzindo o tamanho inicial do bundle.
+
+```ts
+{ path: 'home', loadComponent: () => import('./home.component').then(m => m.HomeComponent) }
+```
+
+### Lazy Load Children
+
+Carrega módulos ou arquivos de rotas filhos sob demanda.
+
+```ts
+{ path: 'curso', loadChildren: () => import('./curso.routes').then(m => m.CURSO_ROUTES) }
+```
+
+### Query Params
+
+Permitem passar dados pela URL usando `?chave=valor`.
+
+```ts
+this.router.navigate(['/servicos'], { queryParams: { status: 'ativo' } });
+```
+
+Leitura:
+
+```ts
+this.route.queryParams.subscribe(params => {
+  console.log(params['status']);
+});
+```
+
+### Navegação programática
+
+Ideal para eventos de clique ou lógicas condicionais:
+
+```ts
+constructor(private router: Router) {}
+
+public goToPage() {
+  this.router.navigate(['/sobre']);
+}
+```
+
+### Acessibilidade com `ariaCurrentWhenActive`
+
+Garante acessibilidade ao indicar visualmente a página atual para leitores de tela:
+
+```html
+<a routerLink="/home" routerLinkActive="active" ariaCurrentWhenActive="page">Home</a>
+<a routerLink="/sobre" routerLinkActive="active" ariaCurrentWhenActive="page">Sobre</a>
+```
+
+### Considerações
+
+* Use `routerLink` para navegação declarativa.
+* Use `Router` e `ActivatedRoute` para navegação e extração de dados dinâmicos no código.
+* Rotas melhoram a organização e escalabilidade da aplicação conforme ela cresce.
 
