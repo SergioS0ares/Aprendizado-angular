@@ -21,6 +21,7 @@ Repositório com meus estudos e experimentos em Angular, incluindo exemplos prá
 15. [Gerenciamento de Ambientes](#gerenciamento-de-ambientes)
 16. [Services e Consumo de APIs](#services)
 17. [Rotas](#rotas)
+18. [Proteção de Rotas](#proteção-de-rotas)
 
 ---
 
@@ -1637,4 +1638,105 @@ Garante acessibilidade ao indicar visualmente a página atual para leitores de t
 * Use `routerLink` para navegação declarativa.
 * Use `Router` e `ActivatedRoute` para navegação e extração de dados dinâmicos no código.
 * Rotas melhoram a organização e escalabilidade da aplicação conforme ela cresce.
+---
+
+## Proteção de Rotas
+
+### Conceito
+
+Guards (ou "guardiões de rota") no Angular são funções que controlam o fluxo de navegação entre rotas com base em regras específicas. Eles ajudam a proteger seções da aplicação, restringir acesso, confirmar ações e condicionar carregamento de rotas.
+
+---
+
+### 🔐 CanActivate
+
+Controla se uma rota pode ser ativada. Ideal para validar autenticação, autorização ou permissões antes de entrar em uma rota.
+
+```ts
+{
+  path: 'dashboard',
+  component: DashboardComponent,
+  canActivate: [CanActivateGuard]
+}
+```
+
+**Uso comum:** proteger rotas privadas para usuários autenticados.
+
+---
+
+### 👨‍👧 CanActivateChild
+
+Semelhante ao `CanActivate`, mas aplicado às rotas **filhas**.
+
+```ts
+{
+  path: 'admin',
+  component: AdminComponent,
+  canActivateChild: [CanActivateChildGuard],
+  children: [
+    { path: 'usuarios', component: UsuariosComponent },
+    { path: 'configuracoes', component: ConfiguracoesComponent }
+  ]
+}
+```
+
+**Uso comum:** proteger seções inteiras da aplicação com navegação interna.
+
+---
+
+### 🎯 CanMatch
+
+Controla se uma rota pode ser carregada, **antes mesmo de ser processada**. Útil para lógica mais dinâmica baseada em contexto.
+
+```ts
+{
+  path: 'relatorios',
+  loadComponent: () => import('./relatorios.component').then(m => m.RelatoriosComponent),
+  canMatch: [CanMatchGuard]
+}
+```
+
+**Uso comum:** carregar uma rota somente se o usuário for um administrador, por exemplo.
+
+---
+
+### 🛑 CanDeactivate
+
+Controla se a navegação pode sair da rota atual. Ideal para impedir a saída sem salvar formulários ou confirmar ações do usuário.
+
+```ts
+{
+  path: 'formulario',
+  component: FormularioComponent,
+  canDeactivate: [CanDeactivateGuard]
+}
+```
+
+**Uso comum:** prevenir perda de dados não salvos.
+
+---
+
+### Exemplo de estrutura de um Guard básico (CanActivate)
+
+```ts
+@Injectable({ providedIn: 'root' })
+export class CanActivateGuard implements CanActivate {
+  canActivate(): boolean {
+    return confirm('Você tem permissão para acessar esta rota?');
+  }
+}
+```
+
+---
+
+### Considerações
+
+* Os guards podem retornar `boolean`, `Observable<boolean>` ou `UrlTree`.
+* São úteis para segurança, confirmação e lógica condicional de carregamento.
+* Devem ser registrados no `app.routes.ts` ou no módulo correspondente.
+* `CanDeactivate` exige que o componente implemente uma interface customizada.
+
+---
+
+Com isso, conseguimos garantir uma navegação controlada e segura na aplicação Angular.
 
