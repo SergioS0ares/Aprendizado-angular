@@ -94,7 +94,8 @@ import { ConsumeServiceComponent } from '@components/consume-service/consume-ser
       <button (click)="boolean = !boolean">Destroy Component</button>
     -->
 
-    <app-consume-service/>
+    <!--<app-consume-service/>-->
+    <router-outlet></router-outlet>
   `
 })
 export class AppComponent {

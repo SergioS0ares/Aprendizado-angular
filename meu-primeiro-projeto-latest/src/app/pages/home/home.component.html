@@ -1,0 +1,39 @@
+<h2>Rotas</h2>
+
+<h3>Home</h3>
+<a
+  [routerLink]="['/curso']"
+  outerLinkActive="active"
+  ariaCurrentWhenActive="page"
+>
+  Home
+</a>
+
+<br>
+<a
+  [routerLink]="['sobre']"
+  routerLinkActive="active"
+  ariaCurrentWhenActive="page"
+>
+  Sobre
+</a>
+
+<br>
+
+<a
+  [routerLink]="['servicos', 'web-design']"
+  [queryParams]="{ name: 'xpto', age: 33 }"
+  routerLinkActive="active"
+  ariaCurrentWhenActive="page"
+>
+  Serviços
+</a>
+
+<br>
+<a
+  [routerLink]="['abacaxi']"
+  routerLinkActive="active"
+  ariaCurrentWhenActive="page"
+>
+  Not Found
+</a>
